@@ -20,4 +20,13 @@ A first ruleset for the Quickstart
 		select when echo hello
 		send_directive("say", { "something": "Hello World"})
 	}
+
+	rule monkey {
+		select when echo monkey
+		pre {
+			text = event:attr("name").defaultsTo("Monkey").klog(text)
+			message = hello(text)
+		}
+		send_directive(message)
+	}
 }
