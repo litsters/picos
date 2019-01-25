@@ -22,6 +22,6 @@ ruleset io.picolabs.use_twilio_v2 {
 			json = twilio:messages(to,from)
 		}
 		
-		send_directive(json)
+		send_directive("JSON", {"content": json})
 	}
 }
