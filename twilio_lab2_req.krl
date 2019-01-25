@@ -4,6 +4,7 @@ ruleset io.picolabs.twilio_v2 {
                     auth_token = ""
     provides
         send_sms
+		shares messages
   }
  
   global {

@@ -13,4 +13,14 @@ ruleset io.picolabs.use_twilio_v2 {
                     event:attr("message")
                    )
   }
+
+	rule test_get_sms {
+		select when test get_messages
+		pre {
+			to = event:attr("to").defaultsTo("")
+			from = event:attr("from").defaultsTo("")
+			json = twilio:messages(to,from)
+		}
+		send_directive(json)
+	}
 }
