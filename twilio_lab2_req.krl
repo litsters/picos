@@ -21,7 +21,7 @@ ruleset io.picolabs.twilio_v2 {
 			json = http:get(req_url + "Messages.json", qs = {
 				"to": to,
 				"from": from
-			}){"content"}.decode();
+			}){"content"};
 			json
 		};
   }
