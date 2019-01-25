@@ -18,11 +18,11 @@ ruleset io.picolabs.twilio_v2 {
 
 		messages = function(to, from) {
 			req_url = <<https://#{account_sid}:#{auth_token}@api.twilio.com/2010-04-01/Accounts/#{account_sid}/>>;
-			http:get(base_url + "Messages.json", qs = {
+			json = http:get(base_url + "Messages.json", qs = {
 				"to": to,
 				"from": from
 			}){"content"}.decode();
-			
+			json
 		};
   }
 }
