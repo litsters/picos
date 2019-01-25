@@ -3,8 +3,7 @@ ruleset io.picolabs.twilio_v2 {
     configure using account_sid = ""
                     auth_token = ""
     provides
-        send_sms
-		shares messages
+        send_sms, messages
   }
  
   global {
