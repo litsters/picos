@@ -16,7 +16,7 @@ A first ruleset for the Wovyn sensor
 	rule process_heartbeat {
 		select when wovyn heartbeat
 		pre {
-			never_used = event:attrs().klog("attrs")
+			never_used = event:attrs.klog("attrs")
 		}
 		send_directive("say", { "heartbeat": "hello world" })
 	}
