@@ -10,7 +10,7 @@ A first ruleset for the Wovyn sensor
 	}
 
 	global {
-		temperature_threshold = 75
+		temperature_threshold = 70
 	}
 
 	rule process_heartbeat {
@@ -36,6 +36,20 @@ A first ruleset for the Wovyn sensor
 			never_used = event:attrs.klog("attrs")
 		}
 		if event:attr("temperature") > temperature_threshold then
-			send_directive("find", { "find_temps": "found" })
+			send_directive("high_temp", { "violation": event:attr("temperature") })
+		fired {
+			raise wovyn event "threshold_violation"
+				attributes event:attrs
+		} else {
+
+		}
+	}
+
+	rule threshold_notification {
+		select when wovyn threshold_violation
+		pre {
+			never_used = event:attrs.klog("attrs")
+		}
+		send_directive("violation", { "alert":"red" })
 	}
 }
