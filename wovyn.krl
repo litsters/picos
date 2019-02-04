@@ -22,7 +22,7 @@ A first ruleset for the Wovyn sensor
 			send_directive("say", { "heartbeat": "hello world" })
 		fired {
 			raise wovyn event "new_temperature_reading" attributes {
-				"temperature" : 42,
+				"temperature" : event:attrs.genericThing.data.temperature[0].temperatureF ,
 				"timestamp" : "now"
 			}
 		} else {
