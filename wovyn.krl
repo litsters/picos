@@ -18,6 +18,7 @@ A first ruleset for the Wovyn sensor
 		pre {
 			never_used = event:attrs.klog("attrs")
 		}
-		send_directive("say", { "heartbeat": "hello world" })
+		if event:attr("genericThing") then
+			send_directive("say", { "heartbeat": "hello world" })
 	}
 }
