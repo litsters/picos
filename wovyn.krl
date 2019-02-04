@@ -23,7 +23,7 @@ A first ruleset for the Wovyn sensor
 		fired {
 			raise wovyn event "new_temperature_reading" attributes {
 				"temperature" : event:attrs.genericThing.data.temperature[0].temperatureF ,
-				"timestamp" : "now"
+				"timestamp" : time:now()
 			}
 		} else {
 
