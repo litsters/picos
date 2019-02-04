@@ -20,5 +20,21 @@ A first ruleset for the Wovyn sensor
 		}
 		if event:attr("genericThing") then
 			send_directive("say", { "heartbeat": "hello world" })
+		fired {
+			raise wovyn event "new_temperature_reading" attributes {
+				"temperature" : 42,
+				"timestamp" : "now"
+			}
+		} else {
+
+		}
+	}
+
+	rule find_high_temps {
+		select when wovyn new_temperature_reading
+		pre {
+			never_used = event:attrs.klog("attrs")
+		}
+		send_directive("find", { "find_temps": "found" })
 	}
 }
