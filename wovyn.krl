@@ -55,10 +55,11 @@ A first ruleset for the Wovyn sensor
 		select when wovyn threshold_violation
 		pre {
 			never_used = event:attrs.klog("attrs")
+			message = "this worked"
 		}
 		twilio:send_sms(phone_number_to,
                     phone_number_from,
-                    event:attr("temperature")
+                    message
                    )
 	}
 }
