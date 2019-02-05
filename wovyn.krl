@@ -17,6 +17,11 @@ A first ruleset for the Wovyn sensor
 		temperature_threshold = 70
 		phone_number_from = "+14358506613"
 		phone_number_to = "+13852688908"
+
+		message = function(temp){
+			msg = "Temperature violation: " + temp;
+			msg
+		}
 	}
 
 	rule process_heartbeat {
@@ -55,7 +60,7 @@ A first ruleset for the Wovyn sensor
 		select when wovyn threshold_violation
 		pre {
 			never_used = event:attrs.klog("attrs")
-			message = "this worked"
+			message = message(event:attrs("temperature"))
 		}
 		twilio:send_sms(phone_number_to,
                     phone_number_from,
