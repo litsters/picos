@@ -16,7 +16,7 @@ A first ruleset for the Wovyn sensor
 	global {
 		temperature_threshold = 70
 		phone_number_from = "+14358506613"
-		phone_number_to = "+13852688908"
+		phone_number_to = "+14358402292"
 
 		message = function(temp){
 			msg = "Temperature violation: " + temp;
