@@ -14,7 +14,7 @@ A first ruleset for the Wovyn sensor
 	}
 
 	global {
-		temperature_threshold = 70
+		temperature_threshold = 65
 		phone_number_from = "+14358506613"
 		phone_number_to = "+14352419394"
 
