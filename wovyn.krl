@@ -7,10 +7,16 @@ A first ruleset for the Wovyn sensor
 		author "Sam Litster"
 		logging on
 
+    use module io.picolabs.lesson_keys
+    use module io.picolabs.twilio_v2 alias twilio
+        with account_sid = keys:twilio{"account_sid"}
+             auth_token =  keys:twilio{"auth_token"}
 	}
 
 	global {
 		temperature_threshold = 70
+		phone_number_from = "+14358506613"
+		phone_number_to = "+13852688908"
 	}
 
 	rule process_heartbeat {
@@ -50,6 +56,9 @@ A first ruleset for the Wovyn sensor
 		pre {
 			never_used = event:attrs.klog("attrs")
 		}
-		send_directive("violation", { "alert":"red" })
+		twilio:send_sms(phone_number_to,
+                    phone_number_from,
+                    event:attr("temperature")
+                   )
 	}
 }
