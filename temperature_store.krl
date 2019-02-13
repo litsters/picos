@@ -46,6 +46,19 @@ A ruleset for tracking temperatures
 
 	rule clear_temperatures {
 		select when sensor reading_reset
-		send_directive("clear_temp", {"arrived": "true"})
+		send_directive("clearing temp data")
+		always {
+			clear ent:temps;
+			clear ent:violation_temps;
+		}
+	}
+
+	rule check {
+		select when wovyn test
+		send_directive("showing data")
+		always {
+			temperatures().klog();
+			threshold_violations().klog();
+		}
 	}
 }
