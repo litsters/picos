@@ -65,7 +65,7 @@ A ruleset for tracking temperatures
 
 	rule check {
 		select when wovyn test
-		send_directive("showing data")
+		send_directive("logging data")
 		always {
 			temperatures().klog();
 			threshold_violations().klog();
