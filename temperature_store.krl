@@ -50,6 +50,7 @@ A ruleset for tracking temperatures
 		send_directive("collecting threshold violation")
 		always {
 			ent:violation_temps := threshold_violations().append([{"temperature": temperature}]);
+			ent:violation_temps.klog();
 			ent:violation_times := violation_times().append([timestamp]);
 		}
 	}
