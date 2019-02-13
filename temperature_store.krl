@@ -62,14 +62,4 @@ A ruleset for tracking temperatures
 			clear ent:violation_temps;
 		}
 	}
-
-	rule check {
-		select when wovyn test
-		send_directive("logging data")
-		always {
-			temperatures().klog();
-			threshold_violations().klog();
-			inrange_temperatures().klog();
-		}
-	}
 }
