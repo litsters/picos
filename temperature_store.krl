@@ -7,7 +7,8 @@ A ruleset for tracking temperatures
 		author "Sam Litster"
 		logging on
 
-		shares temperatures, threshold_violations
+		shares temperatures, threshold_violations, inrange_temperatures
+		provides temperatures, threshold_violations, inrange_temperatures
 	}
 
 	global {
@@ -17,6 +18,15 @@ A ruleset for tracking temperatures
 
 		threshold_violations = function(){
 			ent:violation_temps.defaultsTo([])
+		}
+
+		inrange_temperatures = function(){
+			temperatures().filter(function(reading){
+				notcontained = threshold_violations().all(function(violation){
+					violation.temperature != reading.temperature
+				});
+				notcontained
+			})
 		}
 	}
 
@@ -59,6 +69,7 @@ A ruleset for tracking temperatures
 		always {
 			temperatures().klog();
 			threshold_violations().klog();
+			inrange_temperatures().klog();
 		}
 	}
 }
