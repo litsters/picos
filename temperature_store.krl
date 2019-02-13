@@ -14,6 +14,10 @@ A ruleset for tracking temperatures
 		temperatures = function(){
 			ent:temps.defaultsTo([])
 		}
+
+		timestamps = function(){
+			ent:times.defaultsTo([])
+		}
 	}
 
 	rule collect_temperatures {
@@ -27,7 +31,8 @@ A ruleset for tracking temperatures
 		always {
 			ent:temps := temperatures().append([temperature]);
 			ent:temps.klog();
-			ent:times := ent:times.defaultsTo([]).append([timestamp]);
+			ent:times := timestamps().append([timestamp]);
+			ent:times.klog();
 		}
 	}
 
