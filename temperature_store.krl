@@ -1,6 +1,6 @@
 ruleset temperature_store {
 	meta {
-		name "Wovyn Base"
+		name "Temperature Store"
 		description <<
 A ruleset for tracking temperatures
 >>
