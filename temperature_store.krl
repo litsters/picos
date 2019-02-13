@@ -6,10 +6,14 @@ A ruleset for tracking temperatures
 >>
 		author "Sam Litster"
 		logging on
+
+		shares temperatures
 	}
 
 	global {
-
+		temperatures = function(){
+			ent:temps.defaultsTo([])
+		}
 	}
 
 	rule collect_temperatures {
@@ -21,7 +25,8 @@ A ruleset for tracking temperatures
 		}
 		send_directive("collecting temperature")
 		always {
-			ent:temps := ent:temps.defaultsTo([]).append([temperature]);
+			ent:temps := temperatures().append([temperature]);
+			ent:temps.klog();
 			ent:times := ent:times.defaultsTo([]).append([timestamp]);
 		}
 	}
