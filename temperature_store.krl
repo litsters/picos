@@ -15,16 +15,8 @@ A ruleset for tracking temperatures
 			ent:temps.defaultsTo([])
 		}
 
-		timestamps = function(){
-			ent:times.defaultsTo([])
-		}
-
 		threshold_violations = function(){
 			ent:violation_temps.defaultsTo([])
-		}
-
-		violation_times = function(){
-			ent:violation_times.defaultsTo([])
 		}
 	}
 
@@ -36,8 +28,7 @@ A ruleset for tracking temperatures
 		}
 		send_directive("collecting temperature")
 		always {
-			ent:temps := temperatures().append([temperature]);
-			ent:times := timestamps().append([timestamp]);
+			ent:temps := temperatures().append([{"temperature": temperature, "timestamp": timestamp}]);
 		}
 	}
 
@@ -49,9 +40,7 @@ A ruleset for tracking temperatures
 		}
 		send_directive("collecting threshold violation")
 		always {
-			ent:violation_temps := threshold_violations().append([{"temperature": temperature}]);
-			ent:violation_temps.klog();
-			ent:violation_times := violation_times().append([timestamp]);
+			ent:violation_temps := threshold_violations().append([{"temperature": temperature, "timestamp": timestamp}]);
 		}
 	}
 
