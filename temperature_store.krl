@@ -14,6 +14,9 @@ A ruleset for tracking temperatures
 
 	rule collect_temperatures {
 		select when wovyn new_temperature_reading
+		pre {
+			never_used = event:attrs.klog("attrs")
+		}
 		send_directive("collect_temp", {"arrived": "true"})
 	}
 
