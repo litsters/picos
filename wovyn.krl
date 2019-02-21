@@ -11,12 +11,12 @@ A first ruleset for the Wovyn sensor
     use module io.picolabs.twilio_v2 alias twilio
         with account_sid = keys:twilio{"account_sid"}
              auth_token =  keys:twilio{"auth_token"}
+
+		use module sensor_profile alias profile
 	}
 
 	global {
-		temperature_threshold = 65
 		phone_number_from = "+14358506613"
-		phone_number_to = "+14352419394"
 
 		message = function(temp){
 			msg = "Temperature violation: " + temp;
@@ -45,7 +45,7 @@ A first ruleset for the Wovyn sensor
 		select when wovyn new_temperature_reading
 		pre {
 			never_used = event:attrs.klog("attrs")
-			notice = (event:attr("temperature") > temperature_threshold) => "A temperature violation occurred." | "No violation."
+			notice = (event:attr("temperature") > profile:getThreshold()) => "A temperature violation occurred." | "No violation."
 		}
 		send_directive("high_temp", { "msg": notice })
 		always {
@@ -59,7 +59,7 @@ A first ruleset for the Wovyn sensor
 			never_used = event:attrs.klog("attrs")
 			message = message(event:attr("temperature"))
 		}
-		twilio:send_sms(phone_number_to,
+		twilio:send_sms(profile:getContact(),
                     phone_number_from,
                     message
                    )
