@@ -60,10 +60,14 @@ A first ruleset for the Wovyn sensor
 		pre {
 			never_used = event:attrs.klog("attrs")
 			message = message(event:attr("temperature"))
+			contact = profile:getContact()
 		}
-		twilio:send_sms(profile:getContact(),
+		send_directive("notification", {"contact": contact })
+		always {
+			twilio:send_sms(contact,
                     phone_number_from,
                     message
                    )
+		}
 	}
 }
