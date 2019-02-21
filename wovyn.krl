@@ -62,12 +62,12 @@ A first ruleset for the Wovyn sensor
 			message = message(event:attr("temperature"))
 			contact = profile:getContact()
 		}
-		send_directive("notification", {"contact": contact })
-		always {
-			twilio:send_sms(contact,
+		twilio:send_sms(contact,
                     phone_number_from,
                     message
                    )
+		always {
+			send_directive("notification", {"contact": contact });
 		}
 	}
 }
