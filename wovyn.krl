@@ -45,9 +45,11 @@ A first ruleset for the Wovyn sensor
 		select when wovyn new_temperature_reading
 		pre {
 			never_used = event:attrs.klog("attrs")
-			notice = (event:attr("temperature") > profile:getThreshold()) => "A temperature violation occurred." | "No violation."
+			temperature_threshold = profile:getThreshold()
+			notice = (event:attr("temperature") > temperature_threshold) => "A temperature violation occurred." | "No violation."
+			
 		}
-		send_directive("high_temp", { "threshold": profile:getThreshold() })
+		send_directive("high_temp", { "threshold": temperature_threshold })
 		always {
 			raise wovyn event "threshold_violation" attributes event:attrs if event:attr("temperature") > temperature_threshold
 		}
