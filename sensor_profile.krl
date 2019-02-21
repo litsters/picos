@@ -7,8 +7,8 @@ A ruleset for managing the sensor profile
 		author "Sam Litster"
 		logging on
 
-		shares getProfile, getThreshold
-		provides getThreshold
+		shares getProfile, getThreshold, getContact
+		provides getThreshold, getContact
 	}
 
 	global {
@@ -20,6 +20,11 @@ A ruleset for managing the sensor profile
 		getThreshold = function(){
 			threshold = getProfile().get("threshold");
 			threshold
+		}
+
+		getContact = function(){
+			contact = getProfile().get("contact");
+			contacte
 		}
 	}
 
