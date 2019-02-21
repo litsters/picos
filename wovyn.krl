@@ -66,8 +66,5 @@ A first ruleset for the Wovyn sensor
                     phone_number_from,
                     message
                    )
-		always {
-			send_directive("notification", {"contact": contact });
-		}
 	}
 }
