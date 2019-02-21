@@ -24,7 +24,7 @@ A ruleset for managing the sensor profile
 
 		getContact = function(){
 			contact = getProfile().get("contact");
-			contacte
+			contact
 		}
 	}
 
