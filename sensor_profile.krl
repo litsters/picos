@@ -22,7 +22,7 @@ A ruleset for managing the sensor profile
 		pre {
 			location = event:attr("location")
 			name = event:attr("name")
-			threshold = (event:attr("threshold")) => event:attr("threshold") | getProfile().get("threshold")
+			threshold = (event:attr("threshold")) => event:attr("threshold").as("Number") | getProfile().get("threshold")
 			contact = (event:attr("contact")) => event:attr("contact") | getProfile().get("contact")
 		}
 		send_directive("profile updated")
