@@ -7,13 +7,19 @@ A ruleset for managing the sensor profile
 		author "Sam Litster"
 		logging on
 
-		shares getProfile
+		shares getProfile, getThreshold
+		provides getThreshold
 	}
 
 	global {
 		getProfile = function(){
 			profile = ent:profile.defaultsTo({"location": "Wymount", "name": "Sam", "threshold": 65, "contact": "+14352419394"});
 			profile
+		}
+
+		getThreshold = function(){
+			threshold = getProfile().get("threshold");
+			threshold
 		}
 	}
 
