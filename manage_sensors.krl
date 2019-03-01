@@ -85,7 +85,14 @@ A ruleset for managing a collection of sensors
 		fired {
 			raise wrangler event "child_deletion"
 				attributes {"name": child_to_delete};
-			clear ent:sections{[sensor_name]}
+			clear ent:sensors{[sensor_name]}
+		}
+	}
+
+	rule clear_sensors {
+		select when sensor empty
+		always {
+			ent:sensors := {}
 		}
 	}
 
