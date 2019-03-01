@@ -42,7 +42,8 @@ A ruleset for managing a collection of sensors
 			raise wrangler event "child_creation"
 				attributes { "name": picoName(name),
 										 "color": "#f442eb",
-										 "profile": defaultProfile(name)}
+										 "profile": defaultProfile(name),
+										 "rids": "io.picolabs.lesson_keys;io.picolabs.twilio_v2;temperature_store;wovyn_base;sensor_profile"}
 		}
 	}
 
@@ -51,13 +52,14 @@ A ruleset for managing a collection of sensors
 		pre {
 			the_sensor = {"id": event:attr("id"), "eci": event:attr("eci")}
 			sensor_name = event:attr("rs_attrs"){"profile"}{"name"}
+			profile = event:attr("rs_attrs"){"profile"}
 		}
 		if sensor_name.klog("found sensor_name")
 		then
 			event:send(
-				{ "eci": the_sensor{"eci"}, "eid": "install-ruleset",
-					"domain": "wrangler", "type": "install_rulesets_requested",
-					"attrs": {"rids": "io.picolabs.lesson_keys;io.picolabs.twilio_v2;temperature_store;wovyn_base;sensor_profile"} } )
+				{ "eci": the_sensor{"eci"}, "eid": "initialize-sensor",
+					"domain": "sensor", "type": "profile_updated",
+					"attrs": {"location": profile.location, "name": profile.name, "threshold": profile.threshold, "contact": profile.contact } } )
 		fired {
 			ent:sections := ent:sections.defaultsTo({});
 			ent:sections{[sensor_name]} := the_sensor
