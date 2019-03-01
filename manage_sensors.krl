@@ -73,4 +73,20 @@ A ruleset for managing a collection of sensors
 		}
 	}
 
+	rule sensor_offline {
+		select when sensor unneeded_sensor
+		pre {
+			sensor_name = event:attr("name")
+			exists = ent:sensors >< sensor_name
+			child_to_delete = picoName(sensor_name)
+		}
+		if exists then
+			send_directive("deleting sensor", {"name": sensor_name})
+		fired {
+			raise wrangler event "child_deletion"
+				attributes {"name": child_to_delete};
+			clear ent:sections{[sensor_name]}
+		}
+	}
+
 }
