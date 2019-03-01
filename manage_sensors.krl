@@ -7,7 +7,9 @@ A ruleset for managing a collection of sensors
 		author "Sam Litster"
 		logging on
 
-		shares sensors
+		use module io.picolabs.wrangler alias Wrangler
+
+		shares sensors, collect_temperatures
 	}
 
 	global {
@@ -23,6 +25,15 @@ A ruleset for managing a collection of sensors
 		sensors = function() {
 			senserz = ent:sensors.defaultsTo({});
 			senserz
+		}
+
+		collect_temperatures = function(){
+			collected_temps = ent:sensors.defaultsTo({}).map(function(v,k){
+				eci = v{"eci"};
+				temps = Wrangler:skyQuery(eci, "temperature_store", "temperatures", {});
+				temps
+			});
+			collected_temps
 		}
 	}
 
