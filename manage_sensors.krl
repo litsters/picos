@@ -6,6 +6,8 @@ A ruleset for managing a collection of sensors
 >>
 		author "Sam Litster"
 		logging on
+
+		shares sensors
 	}
 
 	global {
@@ -16,6 +18,11 @@ A ruleset for managing a collection of sensors
 		defaultProfile = function(name) {
 			profile = {"name":name, "location":"Wymount", "threshold":defaultThreshold, "contact": "+14352419394"};
 			profile
+		}
+
+		sensors = function() {
+			senserz = ent:sensors.defaultsTo({});
+			senserz
 		}
 	}
 
@@ -61,15 +68,9 @@ A ruleset for managing a collection of sensors
 					"domain": "sensor", "type": "profile_updated",
 					"attrs": {"location": profile.location, "name": profile.name, "threshold": profile.threshold, "contact": profile.contact } } )
 		fired {
-			ent:sections := ent:sections.defaultsTo({});
-			ent:sections{[sensor_name]} := the_sensor
+			ent:sensors := ent:sensors.defaultsTo({});
+			ent:sensors{[sensor_name]} := the_sensor
 		}
 	}
 
-	rule on_rules_installed {
-		select when wrangler ruleset_added
-		pre {
-			never_used = event.attrs().klog()
-		}
-	}
 }
