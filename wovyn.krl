@@ -13,6 +13,9 @@ A first ruleset for the Wovyn sensor
              auth_token =  keys:twilio{"auth_token"}
 
 		use module sensor_profile alias profile
+		use module io.picolabs.subscriptions alias Subscription
+
+		shares wellKnown
 	}
 
 	global {
@@ -21,6 +24,11 @@ A first ruleset for the Wovyn sensor
 		message = function(temp){
 			msg = "Temperature violation: " + temp;
 			msg
+		}
+
+		wellKnown = function(){
+			wellknown = Subscription:wellKnown_Rx();
+			wellknown
 		}
 	}
 
