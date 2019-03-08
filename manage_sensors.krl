@@ -72,6 +72,7 @@ A ruleset for managing a collection of sensors
 			the_sensor = {"id": event:attr("id"), "eci": event:attr("eci")}
 			sensor_name = event:attr("rs_attrs"){"profile"}{"name"}
 			profile = event:attr("rs_attrs"){"profile"}
+			wellknown = Wrangler:skyQuery(event:attr("eci"), "wovyn_base", "wellKnown", {});
 		}
 		if sensor_name.klog("found sensor_name")
 		then
@@ -89,7 +90,7 @@ A ruleset for managing a collection of sensors
 					"Rx_role": "sensor",
 					"Tx_role": "manager",
 					"channel_type": "subscription",
-					"wellKnown_Tx": Subscription:wellKnown_Rx()
+					"wellKnown_Tx": wellknown
 				}
 		}
 	}
