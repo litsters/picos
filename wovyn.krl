@@ -13,7 +13,7 @@ A first ruleset for the Wovyn sensor
              auth_token =  keys:twilio{"auth_token"}
 
 		use module sensor_profile alias profile
-		use module io.picolabs.subscription alias Subscription
+	
 
 		shares wellKnown
 	}
