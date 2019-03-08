@@ -28,7 +28,7 @@ A first ruleset for the Wovyn sensor
 		}
 
 		wellKnown = function(){
-			wellknown = "asdf";
+			wellknown = Subscription:wellKnown_Rx();
 			wellknown
 		}
 	}
