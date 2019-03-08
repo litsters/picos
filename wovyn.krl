@@ -67,4 +67,12 @@ A first ruleset for the Wovyn sensor
                     message
                    )
 	}
+
+	rule auto_accept {
+		select when wranger inbound_pending_subscription_added
+		fired {
+			raise wranger event "pending_subscription_approval"
+				attributes event:attrs
+		}
+	}
 }
