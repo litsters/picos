@@ -122,4 +122,25 @@ A ruleset for managing a collection of sensors
 		}
 	}
 
+	rule introduce_sensor {
+		select when sensor introduction where (event:attr("wellknown") && event:attr("host") && event:attr("name"))
+		pre {
+			wellknown = event:attr("wellknown")
+			name = event:attr("name")
+			host = event:attr("host")
+		}
+		send_directive("introducing sensor")
+		always {
+			raise wrangler event "subscription" attributes 
+				{
+					"name": name,
+					"Rx_role": "manager",
+					"Tx_role": "sensor",
+					"channel_type": "subscription",
+					"wellKnown_Tx": wellknown,
+					"Tx_host": host
+				}
+		}
+	}
+
 }
