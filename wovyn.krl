@@ -28,7 +28,7 @@ A first ruleset for the Wovyn sensor
 		}
 
 		wellKnown = function(){
-			wellknown = Subscription:wellKnown_Rx();
+			wellknown = Subscription:wellKnown_Rx(){"id"};
 			wellknown
 		}
 	}
