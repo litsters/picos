@@ -72,7 +72,7 @@ A ruleset for managing a collection of sensors
 			the_sensor = {"id": event:attr("id"), "eci": event:attr("eci")}
 			sensor_name = event:attr("rs_attrs"){"profile"}{"name"}
 			profile = event:attr("rs_attrs"){"profile"}
-			wellknown = Wrangler:skyQuery(event:attr("eci"), "wovyn_base", "wellKnown", {});
+			wellknown = Wrangler:skyQuery(event:attr("eci"), "wovyn_base", "wellKnown", {}).klog("wellknown = ");
 		}
 		if sensor_name.klog("found sensor_name")
 		then
