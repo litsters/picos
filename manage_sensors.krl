@@ -29,11 +29,13 @@ A ruleset for managing a collection of sensors
 		}
 
 		collect_temperatures = function(){
-			collected_temps = ent:sensors.defaultsTo({}).map(function(v,k){
-				eci = v{"eci"};
-				temps = Wrangler:skyQuery(eci, "temperature_store", "temperatures", {});
+			collected_temps = Subscription:established("Tx_role", "sensor").map(function(value,key){
+				eci = v{"Tx"};
+				host = v{"Tx_host"};
+				temps = Wrangler:skyQuery(eci, "temperature_store", "temperatures", {}, host);
 				temps
 			});
+
 			collected_temps
 		}
 	}
@@ -90,7 +92,8 @@ A ruleset for managing a collection of sensors
 					"Rx_role": "manager",
 					"Tx_role": "sensor",
 					"channel_type": "subscription",
-					"wellKnown_Tx": wellknown
+					"wellKnown_Tx": wellknown,
+					"Tx_host": "http://localhost:8080"
 				}
 		}
 	}
