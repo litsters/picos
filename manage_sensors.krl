@@ -8,6 +8,7 @@ A ruleset for managing a collection of sensors
 		logging on
 
 		use module io.picolabs.wrangler alias Wrangler
+		use module io.picolabs.subscription alias Subscription
 
 		shares sensors, collect_temperatures
 	}
@@ -80,7 +81,16 @@ A ruleset for managing a collection of sensors
 					"attrs": {"location": profile.location, "name": profile.name, "threshold": profile.threshold, "contact": profile.contact } } )
 		fired {
 			ent:sensors := ent:sensors.defaultsTo({});
-			ent:sensors{[sensor_name]} := the_sensor
+			ent:sensors{[sensor_name]} := the_sensor;
+
+			raise wrangler event "subscription" attributes 
+				{
+					"name": sensor_name,
+					"Rx_role": "sensor",
+					"Tx_role": "manager",
+					"channel_type": "subscription",
+					"wellKnown_Tx": Subscription:wellKnown_Rx()
+				}
 		}
 	}
 
