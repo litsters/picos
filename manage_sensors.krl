@@ -30,8 +30,9 @@ A ruleset for managing a collection of sensors
 
 		collect_temperatures = function(){
 			collected_temps = Subscription:established("Tx_role", "sensor").map(function(value,key){
-				eci = v{"Tx"}.klog("tx=");
-				host = v{"Tx_host"}.klog("host=");
+				
+				eci = value{"Tx"}.klog("tx=");
+				host = value{"Tx_host"}.klog("host=");
 				temps = Wrangler:skyQuery(eci, "temperature_store", "temperatures", {}, host);
 				temps
 			});
