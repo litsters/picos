@@ -8,7 +8,7 @@ A ruleset for managing the sensor profile
 		logging on
 
 		shares getProfile, getThreshold, getContact
-		provides getThreshold, getContact
+		provides getThreshold, getContact, getProfile
 	}
 
 	global {
