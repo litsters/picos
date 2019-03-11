@@ -22,7 +22,7 @@ A ruleset for sensor manager profiles
 		}
 
 		message = function(name, temp){
-			msg = "Threshold violation from sensor " + sensor + ": " + temp;
+			msg = "Threshold violation from sensor " + name + ": " + temp;
 			msg
 		}
 	}
