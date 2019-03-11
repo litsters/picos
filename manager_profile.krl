@@ -37,7 +37,7 @@ A ruleset for sensor manager profiles
 		}
 		twilio:send_sms(contact,
                     phone_number_from,
-                    message
+                    msg
                    )
 	}
 	
