@@ -76,7 +76,7 @@ A first ruleset for the Wovyn sensor
 					"eci": eci,
 					"eid": "notify",
 					"domain": "manager",
-					"type": threshold_violation,
+					"type": "threshold_violation",
 					"attrs": {
 						"temperature": event:attr("temperature"),
 						"sensor": profile:getProfile(){"name"}
