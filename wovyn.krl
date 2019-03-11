@@ -13,6 +13,7 @@ A first ruleset for the Wovyn sensor
              auth_token =  keys:twilio{"auth_token"}
 
 		use module sensor_profile alias profile
+		use module io.picolabs.wrangler alias Wrangler
 		use module io.picolabs.subscription alias Subscription
 	
 
@@ -66,15 +67,26 @@ A first ruleset for the Wovyn sensor
 
 	rule threshold_notification {
 		select when wovyn threshold_violation
-		pre {
-			never_used = event:attrs.klog("attrs")
-			message = message(event:attr("temperature"))
-			contact = profile:getContact().klog()
-		}
-		twilio:send_sms(contact,
-                    phone_number_from,
-                    message
-                   )
+		foreach Subscription:established("Tx_role", "manager") setting (value, key)
+			pre {
+				never_used = event:attrs.klog("attrs")
+				eci = value{"Tx"}.klog("tx=");
+				host = value{"Tx_host"}.klog("host=");
+				subscription_map = {
+					"eci": eci,
+					"eid": "notify",
+					"domain": "manager",
+					"type": threshold_violation,
+					"attrs": {
+						"temperature": event:attr("temperature"),
+						"sensor": profile:getProfile(){"name"}
+					}
+				}
+			}
+			send_directive("notifying manager of threshold violation")
+			always {
+				event:send(subscription_map, host)
+			}
 	}
 
 	rule auto_accept {
