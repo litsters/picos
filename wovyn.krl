@@ -83,10 +83,7 @@ A first ruleset for the Wovyn sensor
 					}
 				}
 			}
-			send_directive("notifying manager of threshold violation")
-			always {
-				event:send(subscription_map, host)
-			}
+			event:send(subscription_map, host)
 	}
 
 	rule auto_accept {
