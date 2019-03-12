@@ -28,10 +28,10 @@ A ruleset for sensor manager profiles
 	}
 
 	rule temperature_violation_notification {
-		select when manager threshold_violation where (event:attr("temperature")  && event:attr("sensor"))
+		select when sensor threshold_violation where (event:attr("temperature"))
 		pre {
 			temp = event:attr("temperature")
-			sensor = event:attr("sensor")
+			sensor = event:attr("sensor").defaultsTo("Anonymous")
 			msg = message(sensor, temp)
 			contact = phone_number_to()
 		}

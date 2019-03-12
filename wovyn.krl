@@ -67,7 +67,7 @@ A first ruleset for the Wovyn sensor
 
 	rule threshold_notification {
 		select when wovyn threshold_violation
-		foreach Subscription:established("Tx_role", "manager") setting (value, key)
+		foreach Subscription:established("Tx_role", "controller") setting (value, key)
 			pre {
 				never_used = event:attrs.klog("attrs")
 				eci = value{"Tx"}.klog("tx=");
@@ -75,7 +75,7 @@ A first ruleset for the Wovyn sensor
 				subscription_map = {
 					"eci": eci,
 					"eid": "notify",
-					"domain": "manager",
+					"domain": "sensor",
 					"type": "threshold_violation",
 					"attrs": {
 						"temperature": event:attr("temperature"),

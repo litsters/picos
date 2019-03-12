@@ -90,7 +90,7 @@ A ruleset for managing a collection of sensors
 			raise wrangler event "subscription" attributes 
 				{
 					"name": sensor_name,
-					"Rx_role": "manager",
+					"Rx_role": "controller",
 					"Tx_role": "sensor",
 					"channel_type": "subscription",
 					"wellKnown_Tx": wellknown,
@@ -134,7 +134,7 @@ A ruleset for managing a collection of sensors
 			raise wrangler event "subscription" attributes 
 				{
 					"name": name,
-					"Rx_role": "manager",
+					"Rx_role": "controller",
 					"Tx_role": "sensor",
 					"channel_type": "subscription",
 					"wellKnown_Tx": wellknown,
