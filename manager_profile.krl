@@ -32,7 +32,7 @@ A ruleset for sensor manager profiles
 		pre {
 			temp = event:attr("temperature")
 			sensor = event:attr("sensor").defaultsTo("Anonymous")
-			msg = message(sensor, temp)
+			msg = message(sensor, temp).klog("msg=")
 			contact = phone_number_to()
 		}
 		twilio:send_sms(contact,
