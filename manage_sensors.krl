@@ -39,6 +39,11 @@ A ruleset for managing a collection of sensors
 
 			collected_temps
 		}
+
+		all_reports = function(){
+			reports = ent:reports.defaultsTo([]);
+			reports
+		}
 	}
 
 	rule sensor_already_exists {
@@ -145,13 +150,29 @@ A ruleset for managing a collection of sensors
 
 	rule report_requested {
 		select when manager new_report
-		pre {
-			report_id = ent:report_counter.defaultsTo(0)
-		}
-		send_directive("generating report" + report_id)
-		always {
-			ent:report_counter := ent:report_counter.defaultsTo(0) + 1;
-		}
+		foreach Subscription:established("Tx_role", "sensor") setting (value, key)
+			pre {
+				report_id = ent:report_counter.defaultsTo(0)
+				channel = Wrangler:myself(){"eci"}.klog("channel=")
+				target_eci = value{"Tx"}.klog("tx=")
+				host = value{"Tx_host"}.klog("host=")
+				sensor_count = Subscription:established("Tx_role", "sensor").keys().length()
+				event = {
+					"eci": target_eci,
+					"eid": "report",
+					"domain": "sensor",
+					"type": "report_temps",
+					"attrs": {
+						"report_id": report_id,
+						"originator": channel
+					}
+				}
+			}
+			event:send(event, host)
+			fired {
+				ent:report_counter := ent:report_counter.defaultsTo(0) + 1 on final;
+				ent:reports := all_reports().append([{"id": report_id, "sensor_count": sensor_count, "num_reported": 0, "reports":[]}]) on final;
+			}
 	}
 
 }
