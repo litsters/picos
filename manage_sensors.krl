@@ -10,7 +10,7 @@ A ruleset for managing a collection of sensors
 		use module io.picolabs.wrangler alias Wrangler
 		use module io.picolabs.subscription alias Subscription
 
-		shares sensors, collect_temperatures, all_reports
+		shares sensors, collect_temperatures, all_reports, recent_reports
 	}
 
 	global {
