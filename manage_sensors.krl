@@ -44,6 +44,13 @@ A ruleset for managing a collection of sensors
 			reports = ent:reports.defaultsTo({});
 			reports
 		}
+
+		recent_reports = function(){
+			report_count = ent:report_counter.defaultsTo(0);
+			min_report = (report_count >= 5) => report_count - 5 | 0;
+			reports = all_reports().filter(function(value, key){key >= min_report});
+			reports
+		}
 	}
 
 	rule sensor_already_exists {
