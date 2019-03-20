@@ -171,16 +171,17 @@ A ruleset for managing a collection of sensors
 			event:send(event, host)
 			fired {
 				ent:report_counter := ent:report_counter.defaultsTo(0) + 1 on final;
-				ent:reports := all_reports().put(report_id, {"sensor_count": sensor_count, "num_reported": 0, "reports":[]}) on final;
+				ent:reports := all_reports().put(report_id, {"sensor_count": sensor_count, "num_reported": 0, "reports":{}}) on final;
 			}
 	}
 
 	rule temps_reported {
 		select when sensor temps_reported where (event:attr("report_id") && event:attr("temps") && event:attr("source"))
 		pre {
-			num_reported = ent:reports{event:attr("report_id")}{"num_reported"} + 1
-			reports = ent:reports{event:attr("report_id")}{"reports"}.append(event:attr("temps"))
-			sensor_count = ent:reports{event:attr("report_id")}{"sensor_count"}
+			id = event:attr("report_id")
+			num_reported = ent:reports{id}{"num_reported"} + 1
+			reports = ent:reports{id}{"reports"}.put(event:attr("source"), event:attr("temps"))
+			sensor_count = ent:reports{id}{"sensor_count"}
 		}
 		send_directive("updating report " + event:attr("report_id"))
 		always {
