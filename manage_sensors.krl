@@ -148,7 +148,7 @@ A ruleset for managing a collection of sensors
 		pre {
 			report_id = ent:report_counter.defaultsTo(0)
 		}
-		send_directive("generating report")
+		send_directive("generating report" + report_id)
 		always {
 			ent:report_counter := ent:report_counter.defaultsTo(0) + 1;
 		}
