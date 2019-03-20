@@ -153,7 +153,7 @@ A ruleset for managing a collection of sensors
 		foreach Subscription:established("Tx_role", "sensor") setting (value, key)
 			pre {
 				report_id = ent:report_counter.defaultsTo(0)
-				channel = Wrangler:myself(){"eci"}.klog("channel=")
+				channel = value{"Rx"}.klog("channel=")
 				target_eci = value{"Tx"}.klog("tx=")
 				host = value{"Tx_host"}.klog("host=")
 				sensor_count = Subscription:established("Tx_role", "sensor").keys().length()
