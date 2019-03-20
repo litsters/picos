@@ -188,4 +188,13 @@ A ruleset for managing a collection of sensors
 		}
 	}
 
+	rule clear_reports {
+		select when manager clear_reports
+		send_directive("clearing reports")
+		always {
+			ent:report_counter := 0;
+			ent:reports := {};
+		}
+	}
+
 }
