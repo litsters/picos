@@ -143,4 +143,15 @@ A ruleset for managing a collection of sensors
 		}
 	}
 
+	rule report_requested {
+		select when manager new_report
+		pre {
+			report_id = ent:report_counter.defaultsTo(0)
+		}
+		send_directive("generating report")
+		always {
+			ent:report_counter := ent:report_counter.defaultsTo(0) + 1;
+		}
+	}
+
 }
