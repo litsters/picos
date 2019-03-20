@@ -10,7 +10,7 @@ A ruleset for managing a collection of sensors
 		use module io.picolabs.wrangler alias Wrangler
 		use module io.picolabs.subscription alias Subscription
 
-		shares sensors, collect_temperatures
+		shares sensors, collect_temperatures, all_reports
 	}
 
 	global {
@@ -41,7 +41,7 @@ A ruleset for managing a collection of sensors
 		}
 
 		all_reports = function(){
-			reports = ent:reports.defaultsTo([]);
+			reports = ent:reports.defaultsTo({});
 			reports
 		}
 	}
@@ -171,8 +171,21 @@ A ruleset for managing a collection of sensors
 			event:send(event, host)
 			fired {
 				ent:report_counter := ent:report_counter.defaultsTo(0) + 1 on final;
-				ent:reports := all_reports().append([{"id": report_id, "sensor_count": sensor_count, "num_reported": 0, "reports":[]}]) on final;
+				ent:reports := all_reports().put(report_id, {"sensor_count": sensor_count, "num_reported": 0, "reports":[]}) on final;
 			}
+	}
+
+	rule temps_reported {
+		select when sensor temps_reported where (event:attr("report_id") && event:attr("temps") && event:attr("source"))
+		pre {
+			num_reported = ent:reports{event:attr("report_id")}{"num_reported"} + 1
+			reports = ent:reports{event:attr("report_id")}{"reports"}.append(event:attr("temps"))
+			sensor_count = ent:reports{event:attr("report_id")}{"sensor_count"}
+		}
+		send_directive("updating report " + event:attr("report_id"))
+		always {
+			ent:reports := all_reports().put(event:attr("report_id"), {"sensor_count": sensor_count, "num_reported": num_reported, "reports": reports});
+		}
 	}
 
 }
