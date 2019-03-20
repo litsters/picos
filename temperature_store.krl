@@ -67,7 +67,7 @@ A ruleset for tracking temperatures
 	}
 
 	rule temperatures_requested {
-		select when sensor report_temps where (event:attr("report_id") && event:attr("originator"))
+		select when sensor report_temps
 		foreach Subscription:established("Tx_role", "controller") setting (value, key)
 			pre {
 				report_id = event:attr("report_id").klog("id=")
