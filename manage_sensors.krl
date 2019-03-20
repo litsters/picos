@@ -183,7 +183,7 @@ A ruleset for managing a collection of sensors
 	}
 
 	rule temps_reported {
-		select when sensor temps_reported where (event:attr("report_id") && event:attr("temps") && event:attr("source"))
+		select when sensor temps_reported
 		pre {
 			id = event:attr("report_id")
 			num_reported = ent:reports{id}{"num_reported"} + 1
