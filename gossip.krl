@@ -41,7 +41,7 @@ A ruleset for gossiping
 
 		parseIndexFromId = function(messageID){
 			split = messageID.split(re#:#);
-			id = split[1];
+			id = split[1].as("Number");
 			id
 		}
 
