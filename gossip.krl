@@ -175,7 +175,8 @@ A ruleset for gossiping
 		foreach Subscription:established("Tx_role", "role") setting (value, key)
 			pre {
 				node = value{"Tx"}.klog("tx=")
-				shouldCreate = (getNeighborKnowledge() >< node)
+				exists = (getNeighborKnowledge() >< node)
+				shouldCreate = not exists
 			}
 			if shouldCreate then
 				send_directive("initializing neighbor knowledge")
