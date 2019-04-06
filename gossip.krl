@@ -7,10 +7,18 @@ A ruleset for gossiping
 		author "Sam Litster"
 		logging on
 
+		shares reportTemps
+
 		use module io.picolabs.subscription alias Subscription
+		
 	}
 
 	global {
+		reportTemps = function(){
+			rumors = getRumors();
+			rumors
+		}
+
 		getHeartbeatFrequency = function(){
 			ent:frequency.defaultsTo(0)
 		}
