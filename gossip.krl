@@ -107,12 +107,19 @@ A ruleset for gossiping
 			chosen_peer
 		}
 
+		randomPeer = function(){
+			neighbors = getNeighborKnowledge().keys().klog("neighbors=");
+			chosen_index = random:integer(neighbors.length() - 1).klog("random neighbor index=");
+			chosen = neighbors.index(chosen_index).klog("random neighbor=");
+			chosen
+		}
+
 		getPeer = function(){
 			help_map = getNeighborKnowledge().map(function(neighbor_knowledge,neighbor){
 				missingRumors = missingRumors(neighbor);
 				missingRumors
 			}).klog("helpmap=");
-			peer = selectPeer(help_map).klog("selected peer=");
+			peer = (help_map.keys().length() > 0) => selectPeer(help_map).klog("selected peer=") | randomPeer();
 			peer
 		}
 
