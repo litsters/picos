@@ -232,7 +232,7 @@ A ruleset for gossiping
 			}
 			send_directive("updating seen rumors for neighbor " + neighbor)
 			always {
-				ent:neighbor_knowledge := getNeighborKnowledge(){neighbor}.put(picoID, last_seen_rumor);
+				ent:neighbor_knowledge := getNeighborKnowledge().put([neighbor, picoID], last_seen_rumor);
 				raise gossip event "seen_updated" attributes { "neighbor": neighbor } on final;
 			}
 	}
