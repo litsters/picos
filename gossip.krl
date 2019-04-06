@@ -97,6 +97,7 @@ A ruleset for gossiping
 				count_rumors_needed = needed_rumors.map(function(rumors,picoID){
 					rumors.keys().length()
 				}).values().reduce(function(total,count){
+					count.klog("count=");
 					total + count
 				},0);
 				count_rumors_needed > 0
