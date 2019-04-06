@@ -188,10 +188,9 @@ A ruleset for gossiping
 			message = prepareMessage(peer)
 		}
 		if frequency > 0 then
-			send_directive("processing gossip heartbeat")
+			event:send(message)
 		fired {
 			schedule gossip event "heartbeat" at time:add(time:now(), {"seconds": frequency});
-			event:send(message);
 		}
 	}
 
