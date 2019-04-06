@@ -32,6 +32,13 @@ A ruleset for gossiping
 			rumors
 		}
 
+		generateNextMessageID = function(){
+			id = meta:picoId;
+			number = getIndex() + 1;
+			messageID = id + ":" + number;
+			messageID
+		}
+
 		parseIndexFromId = function(messageID){
 			length = messageID.length();
 			id = messageID.substr(length - 1, -1);
@@ -261,5 +268,25 @@ A ruleset for gossiping
 				} else {
 					ent:rumors := getRumors().put(picoID, rumors);
 				} 
+	}
+
+	rule new_temp {
+		select when wovyn new_temperature_reading
+		pre {
+			temperature = event:attr("temperature")
+			timestamp = event:attr("timestamp")
+			sensorID = meta:picoId
+			messageID = generateNextMessageID()
+			rumor = {
+				"temperature": temperature,
+				"timestamp": timestamp,
+				"sensorID": sensorID,
+				"messageID": messageID
+			}
+		}
+		send_directive("new temperature reading")
+		always {
+			ent:rumors := getRumors(){sensorID}.put(messageID, rumor);
+		}
 	}
 }
