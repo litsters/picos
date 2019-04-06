@@ -74,7 +74,7 @@ A ruleset for gossiping
 
 		determineLastSeen = function(picoID){
 			last_seen = getRumorsForNode(picoID).map(function(message,messageID){
-				index = parseIndexFromId(messageID);
+				index = parseIndexFromId(messageID).klog("index of " + messageID + "=");
 				index
 			}).values().sort("numeric").reduce(function(highest_sequence,index){
 				next_in_sequence = highest_sequence + 1;
@@ -293,6 +293,7 @@ A ruleset for gossiping
 		send_directive("new temperature reading")
 		always {
 			ent:rumors := getRumors().put([sensorID, messageID], rumor).klog("rumors=");
+			ent:index := getIndex() + 1;
 		}
 	}
 }
