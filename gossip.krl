@@ -101,14 +101,13 @@ A ruleset for gossiping
 				},0);
 				count_rumors_needed > 0
 			});
-			num_peers = help_map.keys().length();
-			chosen_index = random:integer(num_peers - 1);
-			chosen_peer = help_map.keys().index(chosen_index);
+			num_peers = help_map.keys().length().klog("num peers=" + num_peers);
+			chosen_index = random:integer(num_peers - 1).klog("chosen index=" + chosen_index);
+			chosen_peer = help_map.keys().index(chosen_index)("chosen peer=" + chosen_peer);
 			chosen_peer
 		}
 
 		getPeer = function(){
-			peers = getNeighborKnowledge().keys();
 			help_map = getNeighborKnowledge().map(function(neighbor_knowledge,neighbor){
 				missingRumors = missingRumors(neighbor);
 				missingRumors
