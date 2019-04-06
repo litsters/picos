@@ -98,11 +98,12 @@ A ruleset for gossiping
 					rumors.keys().length()
 				}).values().reduce(function(total,count){
 					count.klog("count=");
-					total + count
+					so_far = (total + count).klog("total so far=");
+					so_far
 				},0);
 				count_rumors_needed > 0
 			});
-			num_peers = help_map.keys().length().klog("num peers=" + num_peers);
+			num_peers = helpMap.keys().length().klog("num peers=" + num_peers);
 			chosen_index = random:integer(num_peers - 1).klog("chosen index=" + chosen_index);
 			chosen_peer = (num_peers > 0) => help_map.keys()[chosen_index].klog("chosen peer=" + chosen_peer) | randomPeer();
 			chosen_peer
