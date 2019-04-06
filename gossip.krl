@@ -192,7 +192,7 @@ A ruleset for gossiping
 		pre {
 			frequency = getHeartbeatFrequency()
 			peer = getPeer()
-			message = prepareMessage(peer)
+			message = prepareMessage(peer).klog("heartbeat message=")
 		}
 		if frequency > 0 then
 			event:send(message)
