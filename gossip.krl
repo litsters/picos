@@ -77,10 +77,13 @@ A ruleset for gossiping
 				index = parseIndexFromId(messageID).klog("index of " + messageID + "=");
 				index
 			}).values().sort("numeric").reduce(function(highest_sequence,index){
-				next_in_sequence = highest_sequence + 1;
+				next_in_sequence = (highest_sequence + 1).klog("next should be");
+				index.klog("index=");
 				next_highest = (index == next_in_sequence) => index | highest_sequence;
+				next_highest.klog("next highest=");
 				next_highest
 			}, -1);
+			last_seen.klog("last seen=");
 			last_seen
 		}
 
