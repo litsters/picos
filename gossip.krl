@@ -270,7 +270,7 @@ A ruleset for gossiping
 				if pico_seen then
 					noop()
 				fired {
-					ent:rumors := getRumors(){picoID}.put(messageID, message);
+					ent:rumors := getRumors().put([picoID, messageID], message);
 				} else {
 					ent:rumors := getRumors().put(picoID, rumors);
 				} 
@@ -292,7 +292,7 @@ A ruleset for gossiping
 		}
 		send_directive("new temperature reading")
 		always {
-			ent:rumors := getRumors(){sensorID}.put(messageID, rumor).klog("rumors=");
+			ent:rumors := getRumors().put([sensorID, messageID], rumor).klog("rumors=");
 		}
 	}
 }
