@@ -103,7 +103,7 @@ A ruleset for gossiping
 			});
 			num_peers = help_map.keys().length().klog("num peers=" + num_peers);
 			chosen_index = random:integer(num_peers - 1).klog("chosen index=" + chosen_index);
-			chosen_peer = help_map.keys().index(chosen_index)("chosen peer=" + chosen_peer);
+			chosen_peer = help_map.keys().index(chosen_index).klog("chosen peer=" + chosen_peer);
 			chosen_peer
 		}
 
@@ -111,7 +111,7 @@ A ruleset for gossiping
 			help_map = getNeighborKnowledge().map(function(neighbor_knowledge,neighbor){
 				missingRumors = missingRumors(neighbor);
 				missingRumors
-			});
+			}).klog("helpmap=");
 			peer = selectPeer(help_map).klog("selected peer=");
 			peer
 		}
