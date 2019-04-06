@@ -248,10 +248,6 @@ A ruleset for gossiping
 			neighbor = event:attr("neighbor")
 			missing_rumors = missingRumors(neighbor)
 			should_fire = (missing_rumors.keys().length() > 0)
-		}
-		if should_fire then
-			send_directive("responding to neighbor with missing rumors")
-		fired {
 			message = {
 				"eci": neighbor,
 				"eid": "response",
@@ -261,7 +257,11 @@ A ruleset for gossiping
 					"rumors": missing_rumors
 				}
 			};
-			event:send(message);
+		}
+		if should_fire then
+			event:send(message)
+		fired {
+			
 		}
 	}
 
