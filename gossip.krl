@@ -6,6 +6,8 @@ A ruleset for gossiping
 >>
 		author "Sam Litster"
 		logging on
+
+		use module io.picolabs.subscription alias Subscription
 	}
 
 	global {
@@ -17,17 +19,17 @@ A ruleset for gossiping
 			ent:index.defaultsTo(-1)
 		}
 
-		getLog = function(){
-			ent:log.defaultsTo({})
+		getNeighborKnowledge = function(){
+			ent:neighbor_knowledge.defaultsTo({})
 		}
 
-		getLogsForPeer = function(peer){
-			filtered = getLog().filter(function(value,key){ key == peer});
-			filtered
+		getRumors = function(){
+			ent:rumors.defaultsTo({})
 		}
 
-		getSmartTracker = function(){
-			ent:smart_tracker.defaultsTo({})
+		getRumorsForNode = function(picoID){
+			rumors = getRumors(){picoID}.defaultsTo({});
+			rumors
 		}
 
 		parseIndexFromId = function(messageID){
@@ -36,24 +38,109 @@ A ruleset for gossiping
 			id
 		}
 
-		getPeer = function(){
-			peers_to_help = getSmartTracker().map(function(tracked_info, peer){
-				needed_rumors = tracked_info.map(function(last_seen, other_peer){
-					known_rumors_for_other_peer = getLogsForPeer(other_peer);
-					missing_rumors = known_rumors_for_other_peer.filter(function(message, messageID){
-						index = parseIndexFromId(messageID);
-						index > last_seen
-					});
-					missing_rumors
+		missingRumors = function(neighbor){
+			neighbor_knowledge = getNeighborKnowledge(){neighbor};
+			missing_rumors = getRumors().map(function(rumors,picoID){
+				pico_seen = neighbor_knowledg >< picoID;
+				last_seen = neighbor_knowledge{picoID};
+				unknown_rumors = rumors.filter(function(message,messageID){
+					index = parseIndexFromId(messageID);
+					unknown = (not pico_seen || index > last_seen);
+					unknown
 				});
-				needed_rumors
+				unknown_rumors
+			}).filter(function(missing_rumors,picoID){
+				missing_rumors.keys().length() > 0
 			});
-			peers_needing_info = peers_to_help.filter(function(needed_rumors,peer){ needed_rumors.keys().length() > 0 });
-			num_peers = peers_needing_info.keys().length();
+			missing_rumors
+		}
+
+		unknownRumors = function(picoID, givenRumors){
+			knownRumors = getRumorsForNode(picoID);
+			neededRumors = (knownRumors.keys().length() == 0) => givenRumors | givenRumors.filter(function(message,messageID){
+				known = knownRumors >< messageID;
+				needed = not known;
+				needed
+			});
+			neededRumors
+		}
+
+		determineLastSeen = function(picoID){
+			last_seen = getRumorsForNode(picoID).map(function(message,messageID){
+				index = parseIndexFromId(messageID);
+				index
+			}).values().sort("numeric").reduce(function(highest_sequence,index){
+				next_in_sequence = highest_sequence + 1;
+				next_highest = (index == next_in_sequence) => index | highest_sequence;
+				next_highest
+			}, -1);
+			last_seen
+		}
+
+		generateSeen = function(){
+			seen_report = getRumors().map(function(rumors,picoID){
+				last_seen = determineLastSeen(picoID);
+				last_seen
+			});
+			seen_report
+		}
+
+		selectPeer = function(helpMap){
+			needHelp = helpMap.filter(function(needed_rumors,neighbor){
+				count_rumors_needed = needed_rumors.map(function(rumors,picoID){
+					rumors.keys().length()
+				}).values().reduce(function(total,count){
+					total + count
+				},0);
+				count_rumors_needed > 0
+			});
+			num_peers = help_map.keys().length();
 			chosen_index = random:integer(num_peers - 1);
-			chosen_peer = peers_needing_info.keys().index(chosen_index);
-			ret_val = {"peer": chosen_peer, "needed_rumors": peers_needing_info{chosen_peer}};
-			ret_val
+			chosen_peer = help_map.keys().index(chosen_index);
+			chosen_peer
+		}
+
+		getPeer = function(){
+			peers = getNeighborKnowledge().keys();
+			help_map = getNeighborKnowledge().map(function(neighbor_knowledge,neighbor){
+				missingRumors = missingRumors(neighbor);
+				missingRumors
+			});
+			peer = selectPeer(help_map);
+			peer
+		}
+
+		prepareMessage = function(peer){
+			choice = random:integer(1);
+			message = (choice < 1) => prepareRumorMessage(peer) | prepareSeenMessage(peer);
+			message
+		}
+
+		prepareRumorMessage = function(peer){
+			needed_rumors = missingRumors(peer);
+			message = {
+				"domain": "gossip",
+				"type": "rumor",
+				"eci": peer,
+				"eid": "prop",
+				"attrs": {
+					"rumors": needed_rumors
+				}
+			};
+			message
+		}
+
+		prepareSeenMessage = function(peer){
+			message = {
+				"domain": "gossip",
+				"type": "seen",
+				"eci": peer,
+				"eid": "prop",
+				"attrs": {
+					"last_seen": generateSeen()
+				}
+			};
+			message
 		}
 	}
 
@@ -65,20 +152,39 @@ A ruleset for gossiping
 		if frequency > 0 then
 			send_directive("starting gossip")
 		fired {
-			schedule gossip event "heartbeat" at time:add(time:now(), {"seconds": frequency});
 			ent:frequency := frequency;
+			raise gossip event "initialize"
 		}
+	}
+
+	rule initialize_neighbor_knowledge {
+		select when gossip initialize
+		foreach Subscription:established("Tx_role", "role") setting (value, key)
+			pre {
+				node = value{"Tx"}.klog("tx=")
+				shouldCreate = (getNeighborKnowledge() >< node)
+			}
+			if shouldCreate then
+				send_directive("initializing neighbor knowledge")
+			fired {
+				ent:neighbor_knowledge := getNeighborKnowledge().put(node, {});
+			} finally {
+				schedule gossip event "heartbeat" at time:add(time:now(), {"seconds": frequency}) on final;
+			}
 	}
 
 	rule process_heartbeat {
 		select when gossip heartbeat
 		pre {
 			frequency = getHeartbeatFrequency()
+			peer = getPeer()
+			message = prepareMessage(peer)
 		}
 		if frequency > 0 then
 			send_directive("processing gossip heartbeat")
 		fired {
 			schedule gossip event "heartbeat" at time:add(time:now(), {"seconds": frequency});
+			event:send(message);
 		}
 	}
 
@@ -103,5 +209,57 @@ A ruleset for gossiping
 		fired {
 			ent:frequency := frequency;
 		}
+	}
+
+	rule process_seen {
+		select when gossip seen where getHeartbeatFrequency() > 0
+		foreach event:attr("last_seen") setting (last_seen_rumor,picoID)
+			pre {
+				neighbor = meta:eci.klog("neighbor=")
+			}
+			send_directive("updating seen rumors for neighbor " + neighbor)
+			always {
+				ent:neighbor_knowledge := getNeighborKnowledge(){neighbor}.put(picoID, last_seen_rumor);
+				raise gossip event "seen_updated" attributes { "neighbor": neighbor } on final;
+			}
+	}
+
+	rule respond_to_seen {
+		select when gossip seen_updated
+		pre {
+			neighbor = event:attr("neighbor")
+			missing_rumors = missingRumors(neighbor)
+			should_fire = (missing_rumors.keys().length() > 0)
+		}
+		if should_fire then
+			send_directive("responding to neighbor with missing rumors")
+		fired {
+			message = {
+				"eci": neighbor,
+				"eid": "response",
+				"domain": "gossip",
+				"type": "rumor",
+				"attrs": {
+					"rumors": missing_rumors
+				}
+			};
+			event:send(message);
+		}
+	}
+
+	rule process_rumors {
+		select when gossip rumor where getHeartbeatFrequency() > 0
+		foreach event:attr("rumors") setting (rumors,picoID)
+			foreach rumors setting (message,messageID)
+				pre {
+					pico_seen = getRumorsForNode(picoID).keys().length() > 0
+				}
+				if pico_seen then
+					noop()
+				fired {
+					ent:rumors := getRumors(){picoID}.put(messageID, message);
+				} else {
+					ent:rumors := getRumors().put(picoID, rumors);
+				} 
 	}
 }
