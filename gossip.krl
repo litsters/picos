@@ -46,7 +46,7 @@ A ruleset for gossiping
 		}
 
 		missingRumors = function(neighbor){
-			neighbor_knowledge = getNeighborKnowledge(){neighbor};
+			neighbor_knowledge = getNeighborKnowledge(){neighbor}.klog("neighbor knowledge=");
 			missing_rumors = getRumors().map(function(rumors,picoID){
 				pico_seen = neighbor_knowledg >< picoID;
 				last_seen = neighbor_knowledge{picoID};
@@ -130,7 +130,7 @@ A ruleset for gossiping
 		}
 
 		prepareRumorMessage = function(peer){
-			needed_rumors = missingRumors(peer);
+			needed_rumors = missingRumors(peer).klog("needed rumors=");
 			message = {
 				"domain": "gossip",
 				"type": "rumor",
@@ -292,7 +292,7 @@ A ruleset for gossiping
 		}
 		send_directive("new temperature reading")
 		always {
-			ent:rumors := getRumors(){sensorID}.put(messageID, rumor);
+			ent:rumors := getRumors(){sensorID}.put(messageID, rumor).klog("rumors=");
 		}
 	}
 }
