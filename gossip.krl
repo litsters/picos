@@ -113,7 +113,7 @@ A ruleset for gossiping
 				missingRumors = missingRumors(neighbor);
 				missingRumors
 			});
-			peer = selectPeer(help_map);
+			peer = selectPeer(help_map).klog("selected peer=");
 			peer
 		}
 
