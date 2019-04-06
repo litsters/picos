@@ -105,7 +105,7 @@ A ruleset for gossiping
 			});
 			num_peers = helpMap.keys().length().klog("num peers=" + num_peers);
 			chosen_index = random:integer(num_peers - 1).klog("chosen index=" + chosen_index);
-			chosen_peer = (num_peers > 0) => help_map.keys()[chosen_index].klog("chosen peer=" + chosen_peer) | randomPeer();
+			chosen_peer = (num_peers > 0) => helpMap.keys()[chosen_index].klog("chosen peer=" + chosen_peer) | randomPeer();
 			chosen_peer
 		}
 
